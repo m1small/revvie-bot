@@ -1,0 +1,22 @@
+{
+  "name": "revvie-bot",
+  "version": "0.1.0",
+  "description": "Revvie - The Revenium Discord community bot. AI economics expert powered by the Revenium MCP server.",
+  "main": "src/index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js",
+    "deploy-commands": "node src/deploy-commands.js"
+  },
+  "dependencies": {
+    "discord.js": "^14.16.0",
+    "dotenv": "^16.4.0",
+    "node-cron": "^3.0.3",
+    "node-fetch": "^3.3.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "license": "MIT"
+}
