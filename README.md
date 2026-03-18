@@ -101,13 +101,31 @@ revvie-bot/
 
 ## Deployment
 
-Revvie is a single Node.js process. Any hosting that supports Node 18+ works:
+Revvie deploys to **Railway** via GitHub Actions. Every push to `main` triggers a deploy.
 
-- **Railway** -- `npm start` as the start command
-- **Fly.io** -- `fly launch`, configure with Dockerfile or buildpack
-- **VPS** -- PM2 or systemd to keep it running: `pm2 start src/index.js --name revvie`
+### First-time setup
 
-Expected cost: $5-10/month.
+1. Create a project on [railway.app](https://railway.app) and link this repo
+2. Add all env vars from `.env.example` in Railway's dashboard (Settings > Variables)
+3. Generate a Railway API token: Account Settings > Tokens
+4. Add it as a GitHub Actions secret: repo Settings > Secrets > `RAILWAY_TOKEN`
+5. Push to `main` -- the workflow handles the rest
+
+### Manual deploy
+
+Railway also auto-deploys from the linked GitHub repo. The GitHub Actions workflow is a second path for CI validation before deploy.
+
+### Run commands on Railway
+
+```bash
+# Register slash commands (run once after first deploy or command changes)
+railway run node src/deploy-commands.js
+
+# Post welcome embeds (run once after channels are configured)
+railway run node src/setup-welcome.js
+```
+
+Expected cost: $5-10/month on Railway's Hobby plan.
 
 ## Phase Roadmap
 
