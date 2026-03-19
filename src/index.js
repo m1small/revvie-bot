@@ -7,6 +7,11 @@ import { startScheduler } from './services/scheduler.js';
 
 config();
 
+// Diagnostic: verify env vars reach the container
+console.log('ENV CHECK — DISCORD_TOKEN present:', !!process.env.DISCORD_TOKEN);
+console.log('ENV CHECK — DISCORD_TOKEN type:', typeof process.env.DISCORD_TOKEN);
+console.log('ENV CHECK — DISCORD_TOKEN length:', process.env.DISCORD_TOKEN?.length);
+
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const client = new Client({
