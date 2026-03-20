@@ -11,6 +11,11 @@ export async function execute(interaction) {
     .setDescription('Here\'s what I can help with:')
     .addFields(
       {
+        name: '/ask <question>',
+        value: 'Ask anything about Revenium -- answered from live docs',
+        inline: true,
+      },
+      {
         name: '/docs',
         value: 'Revenium documentation',
         inline: true,
