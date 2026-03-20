@@ -16,7 +16,7 @@ export const topics = [
   },
   // AI agent integration
   {
-    keywords: ['agent', 'ai agent', 'llm', 'context7', 'llms.txt', 'openapi', 'mcp', 'model context protocol', 'claude', 'cursor', 'windsurf', 'copilot', 'cline', 'continue'],
+    keywords: ['ai agent', 'llm', 'context7', 'llms.txt', 'openapi', 'model context protocol', 'cursor', 'windsurf', 'copilot', 'cline', 'continue', 'for ai agents', 'agent integration', 'agent docs'],
     title: 'For AI Agents',
     description: 'Agent-optimized documentation access via Context7 MCP, llms.txt, and OpenAPI specs.\n\n' +
       '**Context7 MCP** (recommended for coding agents):\n```json\n{ "context7": { "command": "npx", "args": ["-y", "@upstash/context7-mcp@latest"] } }\n```\n\n' +
@@ -85,7 +85,7 @@ export const topics = [
   },
   // Squads & traces
   {
-    keywords: ['squad', 'squads', 'trace', 'traces', 'distributed', 'execution', 'workflow', 'chain', 'multi-agent', 'multiagent'],
+    keywords: ['squad', 'squads', 'trace', 'traces', 'tracing', 'distributed', 'execution', 'workflow', 'chain', 'multi-agent', 'multiagent', 'agent activity', 'agent interaction', 'critical path', 'circular'],
     title: 'Squads & Traces',
     description: 'Track multi-agent workflows with distributed tracing. Squads group related executions; traces show the full call chain with critical path analysis and circular pattern detection.',
     url: 'https://docs.revenium.io',
@@ -129,15 +129,22 @@ export const topics = [
 
 /**
  * Match a question to the best topic(s).
- * Returns top matches sorted by keyword hit count.
+ * Multi-word keyword matches score higher than single-word matches
+ * to prefer specific topics over broad ones.
  */
 export function matchTopics(question, maxResults = 3) {
   const q = question.toLowerCase();
   const scored = topics.map(topic => {
-    const hits = topic.keywords.filter(kw => q.includes(kw)).length;
-    return { ...topic, hits };
-  }).filter(t => t.hits > 0);
+    let score = 0;
+    for (const kw of topic.keywords) {
+      if (q.includes(kw)) {
+        // Multi-word phrases score higher (word count as weight)
+        score += kw.split(/\s+/).length;
+      }
+    }
+    return { ...topic, score };
+  }).filter(t => t.score > 0);
 
-  scored.sort((a, b) => b.hits - a.hits);
+  scored.sort((a, b) => b.score - a.score);
   return scored.slice(0, maxResults);
 }
