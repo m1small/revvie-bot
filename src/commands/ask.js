@@ -41,9 +41,10 @@ export async function execute(interaction) {
   // Always show an explicit read-more link
   embed.addFields({ name: 'Read more', value: `[${top.url.replace('https://', '')}](${top.url})` });
 
-  // Add secondary matches as related topics
-  if (matches.length > 1) {
-    const related = matches.slice(1)
+  // Show related topics from the topic's defined relationships
+  if (top.resolvedRelated && top.resolvedRelated.length > 0) {
+    const related = top.resolvedRelated
+      .slice(0, 4)
       .map(m => `[${m.title}](${m.url})`)
       .join('\n');
     embed.addFields({ name: 'Related', value: related });
