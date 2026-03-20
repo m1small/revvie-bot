@@ -31,11 +31,15 @@ export async function execute(interaction) {
     return;
   }
 
+  const top = matches[0];
   const embed = new EmbedBuilder()
     .setColor(0x6C5CE7)
-    .setTitle(matches[0].title)
-    .setURL(matches[0].url)
-    .setDescription(matches[0].description);
+    .setTitle(top.title)
+    .setURL(top.url)
+    .setDescription(top.description);
+
+  // Always show an explicit read-more link
+  embed.addFields({ name: 'Read more', value: `[${top.url.replace('https://', '')}](${top.url})` });
 
   // Add secondary matches as related topics
   if (matches.length > 1) {
