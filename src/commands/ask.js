@@ -1,12 +1,9 @@
 import { SlashCommandBuilder, EmbedBuilder } from 'discord.js';
-import Anthropic from '@anthropic-ai/sdk';
-import { getDocsContext } from '../services/docs.js';
-
-const anthropic = new Anthropic();
+import { matchTopics } from '../data/doc-topics.js';
 
 export const data = new SlashCommandBuilder()
   .setName('ask')
-  .setDescription('Ask Revvie anything about Revenium -- powered by live documentation')
+  .setDescription('Ask Revvie anything about Revenium -- matched to the right docs')
   .addStringOption(option =>
     option
       .setName('question')
@@ -15,61 +12,40 @@ export const data = new SlashCommandBuilder()
   );
 
 export async function execute(interaction) {
-  await interaction.deferReply();
-
   const question = interaction.options.getString('question');
+  const matches = matchTopics(question);
 
-  try {
-    const docsContext = await getDocsContext();
-
-    const message = await anthropic.messages.create({
-      model: 'claude-sonnet-4-20250514',
-      max_tokens: 1024,
-      system: `You are Revvie, the Revenium community bot on Discord. You answer questions about Revenium using the official documentation provided below.
-
-Rules:
-- Answer based on the documentation. If the docs don't cover the question, say so honestly.
-- Be concise -- Discord embeds have character limits. Aim for 1-3 short paragraphs.
-- Never make up features or capabilities not in the docs.
-- For code examples, keep them short and practical.
-
-Linking strategy:
-- For human users asking about features, setup, or concepts: link them to the specific documentation page that answers their question (e.g., https://docs.revenium.io/getting-started, https://docs.revenium.io/ai-metering).
-- For questions about AI agent integration, coding with Revenium, or building with LLMs: point them to Context7 MCP for real-time doc access and the Revenium MCP server (https://github.com/revenium/revenium-mcp) for cost tracking and billing tools.
-- For pricing questions: direct to https://revenium.io/pricing or https://ai.revenium.io
-
-Documentation:
-${docsContext}`,
-      messages: [{ role: 'user', content: question }],
-    });
-
-    const answer = message.content[0].text;
-
-    // Discord embed description limit is 4096 chars
-    const trimmed = answer.length > 4000
-      ? answer.slice(0, 3997) + '...'
-      : answer;
-
+  if (matches.length === 0) {
     const embed = new EmbedBuilder()
-      .setColor(0x6C5CE7)
-      .setTitle('Revvie')
-      .setDescription(trimmed)
-      .setFooter({ text: 'Powered by Revenium docs + Claude | Answers may not be perfect -- check docs.revenium.io' });
-
-    await interaction.editReply({ embeds: [embed] });
-  } catch (err) {
-    console.error('ask command error:', err);
-
-    const errorEmbed = new EmbedBuilder()
-      .setColor(0xD63031)
-      .setTitle('Could not answer that right now')
+      .setColor(0xFDAA5B)
+      .setTitle('Hmm, I\'m not sure about that one')
       .setDescription(
-        'Something went wrong fetching the answer. Try again, or check the docs directly:\n' +
-        '- [Documentation](https://docs.revenium.io)\n' +
-        '- [For AI Agents](https://docs.revenium.io/for-ai-agents)\n' +
-        '- [GitHub](https://github.com/revenium)'
-      );
+        'I couldn\'t match your question to a specific doc. Here are some ways to find what you need:\n\n' +
+        '**Browse the docs:** [docs.revenium.io](https://docs.revenium.io)\n' +
+        '**For AI agents:** [docs.revenium.io/for-ai-agents](https://docs.revenium.io/for-ai-agents)\n' +
+        '**Ask the community:** post your question in a channel and someone will help!'
+      )
+      .setFooter({ text: 'Revvie | Try /docs, /explain, or /resources' });
 
-    await interaction.editReply({ embeds: [errorEmbed] });
+    await interaction.reply({ embeds: [embed], ephemeral: true });
+    return;
   }
+
+  const embed = new EmbedBuilder()
+    .setColor(0x6C5CE7)
+    .setTitle(matches[0].title)
+    .setURL(matches[0].url)
+    .setDescription(matches[0].description);
+
+  // Add secondary matches as related topics
+  if (matches.length > 1) {
+    const related = matches.slice(1)
+      .map(m => `[${m.title}](${m.url})`)
+      .join('\n');
+    embed.addFields({ name: 'Related', value: related });
+  }
+
+  embed.setFooter({ text: 'Revvie | /ask <question> to find the right doc' });
+
+  await interaction.reply({ embeds: [embed] });
 }
