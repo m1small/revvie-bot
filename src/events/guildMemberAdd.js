@@ -17,15 +17,19 @@ export async function execute(member) {
       .addFields(
         {
           name: 'Introduce yourself',
-          value: `Drop a note in <#${process.env.CHANNEL_INTRODUCTIONS}> -- what you build and what brought you here.`,
+          value: 'Drop a note in **#introductions** -- what you build and what brought you here.',
         },
         {
-          name: 'Join the conversation',
-          value: `<#${process.env.CHANNEL_AI_ECONOMICS}> is where the interesting discussions happen.`,
+          name: 'Discuss AI Economics',
+          value: '**#ai-economics** is where the interesting discussions happen.',
         },
         {
-          name: 'Building with Revenium?',
-          value: `<#${process.env.CHANNEL_BUILDING}> is the place for technical questions, show-and-tell, and implementation help.`,
+          name: 'Build with Revenium',
+          value: '**#ai-developers** is the place for technical questions, show-and-tell, and implementation help.',
+        },
+        {
+          name: 'Ask Revvie a Question',
+          value: 'Head to **#ask-revvie** and type `/help` to see what I can do.',
         },
         {
           name: 'Useful links',

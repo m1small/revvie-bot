@@ -46,12 +46,12 @@ client.once('ready', async () => {
         value: 'The main discussion channel. AI pricing, API monetization, cost modeling, LLM economics, metering, billing -- the topics that keep us up at night.',
       },
       {
-        name: '#building-with-revenium',
+        name: '#ai-developers',
         value: 'Technical questions, implementation help, and show-and-tell. Builders helping builders.',
       },
       {
-        name: '#announcements',
-        value: 'Product updates, blog posts, and events. Low frequency, high signal.',
+        name: '#general',
+        value: 'Product updates, blog posts, events, and everything else.',
       },
     );
 
