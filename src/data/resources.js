@@ -158,9 +158,19 @@ export const concepts = {
     explanation: "Extending cloud financial management practices to AI workloads. Traditional FinOps tracks compute, storage, and network -- but AI adds a new cost dimension: inference spending that scales with usage, not infrastructure. AI FinOps requires metering at the request level, attribution to business units, and margin-aware budgeting. The FOCUS standard is evolving to include AI cost categories.",
     related: ["cost-attribution", "chargebacks", "agentic-capital"],
   },
-  "mpm": {
-    title: "MPM (Measure, Prove, Monetize)",
-    explanation: "Revenium's three-verb framework for AI economics maturity. **Measure**: attribute every dollar of AI spend to an agent, job, team, and customer. **Prove**: compute mathematical proof that AI investment converts to value (ROI per job, per workflow, per portfolio). **Monetize**: enforce governance so agents operate within bounded authority and economics flow to revenue. Each stage builds on the last.",
-    related: ["tci", "economic-proof", "agentic-governance"],
+  "measure": {
+    title: "Measure AI Costs",
+    explanation: "The first verb in Revenium's framework. Attribute every dollar of AI spend to an agent, job, team, and customer. Starts with connecting provider API keys (zero code change) to see the full picture, then adding SDK metadata to name your Economic Variables: agents, jobs, squads, traces. The output: a transaction ledger where every dollar is attributed. Agent Debt stops accumulating. Shadow AI surfaces. TCI differentials reveal which workflows cost 10x more than others.",
+    related: ["tci", "cost-attribution", "agent-debt"],
+  },
+  "prove": {
+    title: "Prove AI Value",
+    explanation: "The second verb. Compute mathematical proof that AI investment converts to value. Map business context (organizations, subscriptions, products, customers) onto technical variables to define your Economic Equation. Revenium then computes TCIOUTCOME per job (does it pay for itself?) and PROOF across the portfolio. This is what turns 'AI seems useful' into '12x return on triage workflows, -0.3x on summarization.' The board report writes itself.",
+    related: ["economic-proof", "ai-roi", "agentic-capital"],
+  },
+  "monetize": {
+    title: "Monetize AI Outcomes",
+    explanation: "The third verb. Enforce governance so agents operate within bounded authority and economics flow to revenue. Budgets, guardrails, model routing, interception, and redirection -- all in real time. Every action authorized, bounded, and recorded in the ledger. This is where Agentic Capital becomes a managed investment: agents that prove value get more budget; agents that don't get redirected or stopped.",
+    related: ["agentic-governance", "economic-proof", "agentic-capital"],
   },
 };

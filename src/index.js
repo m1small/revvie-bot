@@ -39,8 +39,22 @@ for (const file of eventFiles) {
   }
 }
 
-// Slash command handler
+// Interaction handler (slash commands + autocomplete)
 client.on(Events.InteractionCreate, async interaction => {
+  // --- Autocomplete ---
+  if (interaction.isAutocomplete()) {
+    const command = client.commands.get(interaction.commandName);
+    if (command?.autocomplete) {
+      try {
+        await command.autocomplete(interaction);
+      } catch (error) {
+        console.error(`Autocomplete error for ${interaction.commandName}:`, error);
+      }
+    }
+    return;
+  }
+
+  // --- Slash commands ---
   if (!interaction.isChatInputCommand()) return;
 
   const command = client.commands.get(interaction.commandName);
@@ -50,7 +64,7 @@ client.on(Events.InteractionCreate, async interaction => {
     await command.execute(interaction);
   } catch (error) {
     console.error(`Error executing ${interaction.commandName}:`, error);
-    const reply = { content: 'Something went wrong. Try again or ask in #building-with-revenium.', ephemeral: true };
+    const reply = { content: 'Something went wrong. Try again or ask in #ai-developers.', ephemeral: true };
     if (interaction.replied || interaction.deferred) {
       await interaction.followUp(reply);
     } else {
